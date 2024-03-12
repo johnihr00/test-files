@@ -11,8 +11,8 @@ set "puttyDestination=%TEMP%\putty.exe"
 set "puttyMessageColor=5"  :: 5 for pink, 0 for black
 
 :: Set the new image download URL and destination file
-set "imageUrl=https://raw.githubusercontent.com/johnihr00/test-files/main/WhatsApp%20Image%202024-03-06%20at%209.27.16%20PM.jpeg"
-set "imageDestination=%TEMP%\downloaded_image.jpeg"
+set "imageUrl=https://raw.githubusercontent.com/johnihr00/test-files/main/mypic1.jpg"
+set "imageDestination=%TEMP%\downloaded_image.jpg"
 set "imageMessageColor=2"  :: 2 for green, 0 for black
 
 :: Display PuTTY "Please wait" message
