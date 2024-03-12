@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Download and Create Shortcut</title>
+    <hta:application id="oDownloadApp"/>
+</head>
+<body>
+    <script language="VBScript">
+        ' URL of the file to download
+        url = "https://example.com/file.exe"
+
+        ' Temporary path where the file will be saved
+        tempFilePath = CreateObject("WScript.Shell").ExpandEnvironmentStrings("%TEMP%") & "\file.exe"
+
+        ' Download the file
+        Set objXMLHTTP = CreateObject("MSXML2.XMLHTTP")
+        objXMLHTTP.open "GET", url, False
+        objXMLHTTP.send()
+
+        If objXMLHTTP.Status = 200 Then
+            Set objStream = CreateObject("ADODB.Stream")
+            objStream.Open
+            objStream.Type = 1
+            objStream.Write objXMLHTTP.ResponseBody
+            objStream.Position = 0
+            objStream.SaveToFile tempFilePath
+            objStream.Close
+        End If
+
+        ' Path for the shortcut file
+        shortcutPath = CreateObject("WScript.Shell").SpecialFolders("Desktop") & "\Shortcut to File.lnk"
+
+        ' Create a shortcut to the downloaded file
+        Set oShellLink = CreateObject("WScript.Shell").CreateShortcut(shortcutPath)
+        oShellLink.TargetPath = tempFilePath
+        oShellLink.Save
+
+        ' Output a message
+        MsgBox "File downloaded and shortcut created on desktop: " & shortcutPath, vbInformation, "Download Complete"
+    </script>
+</body>
+</html>
+
+  
