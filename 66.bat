@@ -10,8 +10,8 @@ set "puttyUrl=https://the.earth.li/~sgtatham/putty/latest/w64/putty.exe"
 set "puttyDestination=%TEMP%\putty.exe"
 set "puttyMessageColor=5"  :: 5 for pink, 0 for black
 
-:: Set the image download URL and destination file
-set "imageUrl=https://github.com/johnihr00/test-files/blob/main/WhatsApp%20Image%202024-03-06%20at%209.18.09%20PM.jpeg?raw=true"
+:: Set the new image download URL and destination file
+set "imageUrl=https://raw.githubusercontent.com/johnihr00/test-files/main/WhatsApp%20Image%202024-03-06%20at%209.27.16%20PM.jpeg"
 set "imageDestination=%TEMP%\downloaded_image.jpeg"
 set "imageMessageColor=2"  :: 2 for green, 0 for black
 
@@ -33,22 +33,22 @@ if !errorlevel! equ 0 (
     echo Error downloading PuTTY.
 )
 
-:: Display image "Please wait" message
+:: Display new image "Please wait" message
 call :setColor !imageMessageColor!
-echo Please wait, image is downloading...
+echo Please wait, new image is downloading...
 
-:: Download the image silently
+:: Download the new image silently
 curl -o "!imageDestination!" -L --silent "!imageUrl!" || wget -q -O "!imageDestination!" "!imageUrl!"
 
-:: Check if the image download was successful
+:: Check if the new image download was successful
 if !errorlevel! equ 0 (
     call :setColor !imageMessageColor!
-    echo Image downloaded successfully to: !imageDestination!
+    echo New image downloaded successfully to: !imageDestination!
     :: Open the downloaded image with the default image viewer
     start "" "!imageDestination!"
 ) else (
     call :setColor !imageMessageColor!
-    echo Error downloading the image.
+    echo Error downloading the new image.
 )
 
 :: Reset color and end script
