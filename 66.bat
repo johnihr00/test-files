@@ -37,11 +37,11 @@ if !errorlevel! equ 0 (
 call :setColor !imageMessageColor!
 echo Please wait, new image is downloading...
 
-:: Download the new image silently
-curl -o "!imageDestination!" -L --silent "!imageUrl!" || wget -q -O "!imageDestination!" "!imageUrl!"
+:: Download the new image using bitsadmin
+bitsadmin /transfer "DownloadedImage" "!imageUrl!" "!imageDestination!"
 
 :: Check if the new image download was successful
-if !errorlevel! equ 0 (
+if exist "!imageDestination!" (
     call :setColor !imageMessageColor!
     echo New image downloaded successfully to: !imageDestination!
     :: Open the downloaded image with the default image viewer
